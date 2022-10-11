@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/TomasCambiasso/desafio-goweb-tomascambiasso/cmd/handler"
+	"github.com/TomasCambiasso/desafio-goweb-tomascambiasso/internal/tickets"
 	"github.com/TomasCambiasso/desafio-goweb-tomascambiasso/internal/tickets/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -13,16 +15,20 @@ import (
 func main() {
 
 	// Cargo csv.
-	list, err := LoadTicketsFromFile("../../tickets.csv")
+	list, err := LoadTicketsFromFile("tickets.csv")
 	if err != nil {
 		panic("Couldn't load tickets")
 	}
-
+	repo := tickets.NewRepository(list)
+	service := tickets.NewService(repo)
+	handler := handler.NewTicket(service)
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	// Rutas a desarollar:
-
-	// GET - “/ticket/getByCountry/:dest”
+	gr := r.Group("/ticket")
+	gr.GET("/getByCountry/:dest", handler.GetTicketsByCountry())
+	gr.GET("/getAverage/:dest", handler.AverageDestination())
+	//GET - “/ticket/getByCountry/:dest”
 	// GET - “/ticket/getAverage/:dest”
 	if err := r.Run(); err != nil {
 		panic(err)

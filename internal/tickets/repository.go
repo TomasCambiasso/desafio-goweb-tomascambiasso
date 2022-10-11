@@ -23,7 +23,6 @@ func NewRepository(db []domain.Ticket) Repository {
 }
 
 func (r *repository) GetAll(ctx context.Context) ([]domain.Ticket, error) {
-
 	if len(r.db) == 0 {
 		return []domain.Ticket{}, fmt.Errorf("empty list of tickets")
 	}
@@ -34,7 +33,7 @@ func (r *repository) GetAll(ctx context.Context) ([]domain.Ticket, error) {
 func (r *repository) GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error) {
 
 	var ticketsDest []domain.Ticket
-	
+
 	if len(r.db) == 0 {
 		return []domain.Ticket{}, fmt.Errorf("empty list of tickets")
 	}
